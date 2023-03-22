@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http import HttpResponse
 
 DATA = {
     'omlet': {
@@ -28,3 +29,16 @@ DATA = {
 #     'ингредиент2': количество2,
 #   }
 # }
+
+def recipes_book(request, dish):
+    servings = request.GET.get('servings')
+    ingri = DATA.get(dish)
+    context = {'recipe': ingri}
+    if servings is None:
+        return render(request, 'calculator/index.html', context)
+    else:
+        multiplied = {}
+        for key, val in ingri.items():
+            multiplied[key] = val * int(servings)
+        context = {'recipe': multiplied}
+        return render(request, 'calculator/index.html', context)
